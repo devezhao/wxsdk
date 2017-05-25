@@ -1,15 +1,12 @@
-/*
- Copyright (c) 2015 QIDAPP.com. All rights reserved.
- QIDAPP.com PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-package com.qidapp.wxsdk.api.meta;
+package cn.devezhao.wxsdk.mp.metas;
 
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
-import org.qdss.commons.util.xml.XmlHelper;
+
+import cn.devezhao.wxsdk.utils.ApiUtils;
 
 /**
  * @author Chen Qun
@@ -31,7 +28,7 @@ public class ImageReply extends BaseReply{
 	
 	@Override
 	public String toXML() {
-		Document xml = XmlHelper.parseText("<xml/>");
+		Document xml = ApiUtils.parseDocument("<xml/>");
 		Element root = xml.getRootElement();
 		for (Map.Entry<String, Object> e : map.entrySet()) {
 			Object v = e.getValue();

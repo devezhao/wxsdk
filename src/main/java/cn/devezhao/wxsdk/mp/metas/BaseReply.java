@@ -1,8 +1,4 @@
-/*
- Copyright (C) 2011-2014 QIDAPP.com. All rights reserved.
- QIDAPP.com PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-package com.qidapp.wxsdk.api.meta;
+package cn.devezhao.wxsdk.mp.metas;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
@@ -10,8 +6,8 @@ import java.util.Map;
 
 import org.dom4j.Document;
 import org.dom4j.Element;
-import org.qdss.commons.util.CalendarUtils;
-import org.qdss.commons.util.xml.XmlHelper;
+
+import cn.devezhao.wxsdk.utils.ApiUtils;
 
 /**
  * XML格式的主动发送消息
@@ -29,11 +25,11 @@ public class BaseReply implements Serializable {
 		map.put("ToUserName", toUserName);
 		map.put("FromUserName", fromUserName);
 		map.put("MsgType", msgType);
-		map.put("CreateTime", CalendarUtils.getInstance().getTimeInMillis());
+		map.put("CreateTime", System.currentTimeMillis() / 1000);
 	}
 
 	protected Element buildXML() {
-		Document xml = XmlHelper.parseText("<xml/>");
+		Document xml = ApiUtils.parseDocument("<xml/>");
 		Element root = xml.getRootElement();
 		for (Map.Entry<String, Object> e : map.entrySet()) {
 			Object v = e.getValue();

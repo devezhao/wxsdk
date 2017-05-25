@@ -61,6 +61,6 @@ public abstract class BaseApi {
 	}
 	
 	public Result execJson() {
-		return getApiInvoker().invokePostJson(getApiUrl(), getParams(), getPostJson());
+		return getApiInvoker().invokePost(getApiUrl(), getParams(), getPostJson());
 	}
 }

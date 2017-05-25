@@ -1,11 +1,6 @@
-/*
- Copyright (c) 2015 QIDAPP.com. All rights reserved.
- QIDAPP.com PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
-package com.qidapp.wxsdk.api.meta;
+package cn.devezhao.wxsdk.mp.metas;
 
 import com.alibaba.fastjson.JSONObject;
-import com.qidapp.wxsdk.api.meta.TextSend;
 
 /**
  * 文本消息发送预览

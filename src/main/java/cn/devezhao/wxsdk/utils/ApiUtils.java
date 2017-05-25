@@ -1,13 +1,17 @@
-package cn.devezhao.wxsdk;
+package cn.devezhao.wxsdk.utils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.qdss.commons.util.CodecUtils;
-import org.qdss.commons.util.EncryptUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
 
 /**
  * Api工具类
@@ -39,7 +43,7 @@ public class ApiUtils {
 			
 			if (notInUriParamName != null && notInUriParamName.equalsIgnoreCase(e.getKey())) {
 			} else {
-				uri.append(e.getKey()).append('=').append(CodecUtils.urlEncode(e.getValue()));
+				uri.append(e.getKey()).append('=').append(urlEncode(e.getValue()));
 			}
 		}
 		return uri.toString();
@@ -77,9 +81,74 @@ public class ApiUtils {
 		
 		String sha1 = "";
 		try {
-			sha1 = EncryptUtils.toSHA1Hex(sb.toString().getBytes("utf-8"));
+			sha1 = toSHA1Hex(sb.toString().getBytes("utf-8"));
 		} catch (UnsupportedEncodingException e) {
 		}
 		return sha1.equals(map.get("signature"));
 	}
-}
+	
+	/**
+	 * URL 编码
+	 * 
+	 * @param text
+	 * @return
+	 */
+	public static String urlEncode(String text) {
+		try {
+			return URLEncoder.encode(text, "utf-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("Exception encoding URL string: " + e);
+		}
+	}
+	
+	/**
+	 * SHA1加密
+	 * 
+	 * @param input
+	 * @return
+	 */
+	public static byte[] toSHA1(byte[] input) {
+		MessageDigest digest = null;
+		try {
+			digest = MessageDigest.getInstance("SHA1");
+		} catch (NoSuchAlgorithmException e) {
+			throw new RuntimeException(e);
+		}
+		digest.update(input);
+		return digest.digest();
+	}
+	
+	/**
+	 * SHA1加密
+	 * 
+	 * @param input
+	 * @return
+	 */
+	public static String toSHA1Hex(byte[] input) {
+		return toHexString(toSHA1(input));
+	}
+	
+	/**
+	 * @param data
+	 * @return
+	 */
+	public static String toHexString(byte[] data) {
+		StringBuilder sb = new StringBuilder();
+		for (byte b : data) {
+			sb.append(String.format("%02x", b));
+		}
+		return sb.toString();
+	}
+	
+	/**
+	 * @param xml
+	 * @return
+	 */
+	public static Document parseDocument(String xml) {
+		try {
+			return DocumentHelper.parseText(xml);
+		} catch (DocumentException e) {
+			throw new RuntimeException(xml);
+		}
+	}
+} 

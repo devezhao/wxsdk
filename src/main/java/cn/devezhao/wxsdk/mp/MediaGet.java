@@ -6,14 +6,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.io.IOUtils;
-import org.apache.http.Header;
-import org.qdss.commons.util.CodecUtils;
+import java.util.UUID;
 
 import cn.devezhao.wxsdk.ApiInvoker;
-import cn.devezhao.wxsdk.ApiUtils;
+import cn.devezhao.wxsdk.utils.ApiUtils;
 
 /**
  * 获取媒体文件
@@ -39,16 +35,9 @@ public class MediaGet extends BaseApi implements AuthzApi<MediaGet> {
 	
 	public File execGet(File toDir) throws IOException {
 		String uri = ApiUtils.toApiInvokeURI(getApiUrl(), getParams(), null);
-		GetMethod method = new GetMethod(uri);
-		method.getParams().setSoTimeout(1000 * 60 * 2);
-		byte[] bytes = getApiInvoker().getHttpClientFetcher().readBinary(method);
+		byte[] bytes = getApiInvoker().getHttpClient().readBinary(uri, 60 * 1000);
 		
-		Header cd = method.getResponseHeader("Content-disposition");
-		String fileName = cd == null ? "NOCD-" + CodecUtils.randomCode(32) : cd.getValue();
-		if (cd != null) {
-			fileName = fileName.split("filename=")[1];
-			fileName = fileName.replaceAll("\"", "");
-		}
+		String fileName = UUID.randomUUID().toString();
 		File toFile = new File(toDir, fileName);
 		
 		OutputStream os = null;
@@ -57,7 +46,9 @@ public class MediaGet extends BaseApi implements AuthzApi<MediaGet> {
 			os.write(bytes, 0, bytes.length);
 			os.flush();
 		} finally {
-			IOUtils.closeQuietly(os);
+			if (os != null) {
+				os.close();
+			}
 		}
 		return toFile;
 	}

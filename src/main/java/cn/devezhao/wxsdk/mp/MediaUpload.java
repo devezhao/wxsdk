@@ -16,9 +16,9 @@ import javax.imageio.ImageIO;
 
 import cn.devezhao.wxsdk.ApiException;
 import cn.devezhao.wxsdk.ApiInvoker;
-import cn.devezhao.wxsdk.ApiUtils;
 import cn.devezhao.wxsdk.JsonResult;
 import cn.devezhao.wxsdk.Result;
+import cn.devezhao.wxsdk.utils.ApiUtils;
 
 /**
  * 上传媒体文件

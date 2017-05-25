@@ -1,15 +1,16 @@
 package cn.devezhao.wxsdk;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.StringRequestEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+
+import cn.devezhao.wxsdk.utils.ApiUtils;
+import cn.devezhao.wxsdk.utils.HttpClientEx;
 
 /**
- * API调用者
+ * API 调用者
  * 
  * @author Zhao Fangfang
  * @version $Id: ApiInvoker.java 60 2015-08-26 09:21:51Z zhaoff@wisecrm.com $
@@ -17,7 +18,7 @@ import org.apache.commons.httpclient.methods.StringRequestEntity;
  */
 public class ApiInvoker {
 	
-	final private HttpClientFetcher httpClientFetcher;
+	private HttpClientEx httpClient;
 	private boolean throwError;
 	private String apiUrlBase;
 	
@@ -39,18 +40,18 @@ public class ApiInvoker {
 	 * @param apiUrlBase
 	 */
 	public ApiInvoker(boolean throwError, String apiUrlBase) {
-		this.httpClientFetcher = new HttpClientFetcher();
+		this.httpClient = new HttpClientEx(10 * 1000, "utf-8");
 		this.throwError = throwError;
 		this.apiUrlBase = apiUrlBase;
 	}
 	
 	/**
-	 * 获取HttpClientFetcher
+	 * 获取 <tt>HttpClientEx</tt>
 	 * 
 	 * @return
 	 */
-	public HttpClientFetcher getHttpClientFetcher() {
-		return httpClientFetcher;
+	public HttpClientEx getHttpClient() {
+		return httpClient;
 	}
 	
 	/**
@@ -73,10 +74,8 @@ public class ApiInvoker {
 		if (apiUrlBase != null) {
 			apiUrl = apiUrl.replaceFirst("https://api.weixin.qq.com/", apiUrlBase);
 		}
-		final String uri = ApiUtils.toApiInvokeURI(apiUrl, params, null);
-		HttpMethod method = new GetMethod(uri);
-		
-		Result result = getHttpClientFetcher().executeMethod(method);
+		String uri = ApiUtils.toApiInvokeURI(apiUrl, params, null);
+		Result result = httpClient.get(uri);
 		if (isThrowError()) {
 			result.throwIfError();
 		}
@@ -88,34 +87,15 @@ public class ApiInvoker {
 	 * 
 	 * @param apiUrl
 	 * @param params
-	 * @return
-	 */
-	public Result invokePost(String apiUrl, Map<String, String> params) {
-		return invokePost(apiUrl, params, null);
-	}
-	
-	/**
-	 * 调用<tt>POST</tt>方法, 可选择指定大文本参数名称
-	 * 
-	 * @param apiUrl
-	 * @param params
 	 * @param longtextParamName
 	 * @return
 	 */
-	public Result invokePost(String apiUrl, Map<String, String> params, String longtextParamName) {
+	public Result invokePost(String apiUrl, Map<String, String> params) {
 		if (apiUrlBase != null) {
 			apiUrl = apiUrl.replaceFirst("https://api.weixin.qq.com/", apiUrlBase);
 		}
-		final String uri = ApiUtils.toApiInvokeURI(apiUrl, params, longtextParamName);
-		PostMethod method = new PostMethod(uri);
-		if (longtextParamName != null) {
-			String v = params.get(longtextParamName);
-			if (v != null) {
-				method.setParameter(longtextParamName, v);
-			}
-		}
-		
-		Result result = getHttpClientFetcher().executeMethod(method);
+		String uri = ApiUtils.toApiInvokeURI(apiUrl, params, null);
+		Result result = httpClient.post(uri, null);
 		if (isThrowError()) {
 			result.throwIfError();
 		}
@@ -130,21 +110,18 @@ public class ApiInvoker {
 	 * @param postJson
 	 * @return
 	 */
-	public Result invokePostJson(String apiUrl, Map<String, String> params, String postJson) {
+	public Result invokePost(String apiUrl, Map<String, String> params, String postJson) {
 		if (apiUrlBase != null) {
 			apiUrl = apiUrl.replaceFirst("https://api.weixin.qq.com/", apiUrlBase);
 		}
-		final String uri = ApiUtils.toApiInvokeURI(apiUrl, params, null);
-		PostMethod method = new PostMethod(uri);
-		StringRequestEntity entity = null;
-		try {
-			entity = new StringRequestEntity(postJson, "application/json", "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// IGNORE...
-		}
-		method.setRequestEntity(entity);
+		String uri = ApiUtils.toApiInvokeURI(apiUrl, params, null);
 		
-		Result result = getHttpClientFetcher().executeMethod(method);
+		HttpPost httpPost = new HttpPost(uri);
+		if (postJson != null) {
+			httpPost.setEntity(new StringEntity(postJson, ContentType.APPLICATION_JSON));
+		}
+		
+		Result result = getHttpClient().execMethod(httpPost);
 		if (isThrowError()) {
 			result.throwIfError();
 		}
