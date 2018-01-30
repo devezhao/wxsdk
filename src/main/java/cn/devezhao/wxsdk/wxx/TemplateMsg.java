@@ -48,20 +48,28 @@ public class TemplateMsg {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public TemplateMsg addKeyword(String key, String value) {
+	public TemplateMsg addKeyword(String key, String value, String color) {
 		Map<String, Map<String, String>> data1 = ((Map<String, Map<String, String>>) data.get("data"));
 		Map<String, String> m = new HashMap<>();
 		m.put("value", value);
-		m.put("color", "#000000");
+		m.put("color", color == null ? "#000000" : color);
 		data1.put(key, m);
 		return this;
 	}
 	
+	public TemplateMsg addKeyword(String key, String value) {
+		return addKeyword(key, value, "#000000");
+	}
+	
+	@Deprecated
 	public TemplateMsg addKeyword(int keyIndex, String value) {
 		return addKeyword("keyword" + keyIndex, value);
 	}
 	
 	public TemplateMsg setEmphasisKeyword(String key) {
+		if (!key.endsWith(".DATA")) {
+			key += ".DATA";
+		}
 		data.put("emphasis_keyword", key);
 		return this;
 	}

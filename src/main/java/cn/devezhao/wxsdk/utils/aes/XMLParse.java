@@ -36,8 +36,13 @@ class XMLParse {
 			NodeList nodelist1 = root.getElementsByTagName("Encrypt");
 			NodeList nodelist2 = root.getElementsByTagName("ToUserName");
 			result[0] = 0;
-			result[1] = nodelist1.item(0).getTextContent();
-			result[2] = nodelist2.item(0) == null ? "" : nodelist2.item(0).getTextContent();
+			
+//			result[1] = nodelist1.item(0).getTextContent();
+//			result[2] = nodelist2.item(0) == null ? "" : nodelist2.item(0).getTextContent();
+			// TODO 获取加密XML数据
+			result[1] = nodelist1.item(0).toString();
+			result[2] = nodelist2.item(0) == null ? "" : nodelist2.item(0).toString();
+			
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -54,10 +59,12 @@ class XMLParse {
 	 * @return 生成的xml字符串
 	 */
 	public static String generate(String encrypt, String signature, String timestamp, String nonce) {
-
-		String format = "<xml>\n" + "<Encrypt><![CDATA[%1$s]]></Encrypt>\n"
+		String format = "<xml>\n"
+				+ "<Encrypt><![CDATA[%1$s]]></Encrypt>\n"
 				+ "<MsgSignature><![CDATA[%2$s]]></MsgSignature>\n"
-				+ "<TimeStamp>%3$s</TimeStamp>\n" + "<Nonce><![CDATA[%4$s]]></Nonce>\n" + "</xml>";
+				+ "<TimeStamp>%3$s</TimeStamp>\n"
+				+ "<Nonce><![CDATA[%4$s]]></Nonce>\n"
+				+ "</xml>";
 		return String.format(format, encrypt, signature, timestamp, nonce);
 
 	}

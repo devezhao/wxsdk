@@ -4,7 +4,7 @@
 
 	<groupId>cn.devezhao</groupId>
 	<artifactId>wxsdk</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>commons</name>
@@ -22,12 +22,25 @@
 		<url>https://github.com/devezhao/wxsdk</url>
 		<connection>scm:git:git://github.com/devezhao/wxsdk.git</connection>
 		<developerConnection>scm:git:git@github.com:devezhao/wxsdk.git</developerConnection>
-		<tag>devezhao-wxsdk-1.0.0</tag>
+		<tag>devezhao-wxsdk-1.0.1</tag>
 	</scm>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 	<dependencies>
 		<dependency>

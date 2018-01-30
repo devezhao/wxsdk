@@ -52,7 +52,7 @@ public abstract class BaseApi {
 		return this;
 	}
 	
-	public String getPostJson() {
+	protected String getPostJson() {
 		return postJson;
 	}
 	
@@ -60,7 +60,11 @@ public abstract class BaseApi {
 		return getApiInvoker().invokeGet(getApiUrl(), getParams());
 	}
 	
-	public Result execJson() {
+	public Result execPost() {
 		return getApiInvoker().invokePost(getApiUrl(), getParams(), getPostJson());
+	}
+	
+	public Result execJson() {
+		return execPost();
 	}
 }
