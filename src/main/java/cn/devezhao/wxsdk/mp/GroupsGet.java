@@ -19,5 +19,4 @@ public class GroupsGet extends BaseApi implements AuthzApi<GroupsGet> {
 	public GroupsGet access_token(String value) {
 		return (GroupsGet) addParam("access_token", value);
 	}
-
 }

@@ -23,5 +23,4 @@ public class MenuCreate extends BaseApi implements AuthzApi<MenuCreate> {
 	public MenuCreate addButton(String jsonText) {
 		return (MenuCreate) setPostJson(jsonText);
 	}
-
 }
