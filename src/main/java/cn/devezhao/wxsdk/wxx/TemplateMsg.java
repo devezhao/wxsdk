@@ -31,7 +31,6 @@ public class TemplateMsg {
 	public TemplateMsg(String touser, String templateId, String formId, String page) {
 		data.put("touser", touser);
 		data.put("template_id", templateId);
-		data.put("form_id", formId);
 		if (formId != null) {
 			data.put("form_id", formId);
 		}
